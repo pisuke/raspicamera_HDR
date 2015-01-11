@@ -5,7 +5,7 @@
 # francesco.anselmo@arup.com
 
 min_free_space = 100 # minimum free space in MB
-#cmd_fmt = "raspistill -mm average -br 50 -sa 100 -cfx 128:128 -awb off -v -t 1 -vf -hf -w 1024 -h 768" # raspistill command format
+#cmd_fmt = "raspistill -mm matrix -cfx 34:51 -awb off -v -t 1 -vf -hf -w 1024 -h 768" # raspistill command format
 cmd_fmt = "raspistill -mm average -awb sun -v -t 1 -vf -hf -w 1024 -h 768" # raspistill command format
 folder = "/opt/camera"
 link_to_webserver = True
