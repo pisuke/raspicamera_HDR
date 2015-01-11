@@ -1,0 +1,27 @@
+<html>
+<head>
+<Meta Http-equiv="Refresh" Content="30">
+<title>Arup LightLab Camera</title>
+</head>
+<body bgcolor="white" text="black">
+<center><h1>Arup LightLab Camera</h1>
+<img src="img/current.jpg" name="refresh">
+
+      <script language="JavaScript" type="text/javascript">
+      <!--
+      var t = 60 // interval in seconds
+      image = "img/current.jpg" //name of the image
+      function Start() {
+      tmp = new Date();
+      tmp = "?"+tmp.getTime()
+      document.images["refresh"].src = image+tmp
+      setTimeout("Start()", t*1000)
+      }
+      Start();
+       -->
+      </script>
+<br>
+<a href="img/">Browse all the photos</a>
+</center>
+</body>
+</html>
