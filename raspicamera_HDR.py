@@ -8,10 +8,13 @@ min_free_space = 100 # minimum free space in MB
 ISOs = [100]
 speeds = [1000000/8000,1000000/4000,1000000/2000,1000000/1000,1000000/500,
           1000000/250 ,1000000/125, 1000000/60,  1000000/30,  1000000/15,
-          1000000/8,   1000000/4,   1000000/2,   1000000,     2000000,
-          4000000]
+          1000000/8,   1000000/4,   1000000/2,   1000000,     
+          #2000000,
+          #4000000
+         ]
 cmd_fmt = "raspistill -v -t 1 -vf -hf -w 1024 -h 768" # raspistill command format
-opt_man = "-awb none -ifx none -drc off" # raspistill manual options format
+#opt_man = "-mm average -awb sun -ifx none -drc off" # raspistill manual options format
+opt_man = "-mm spot -awb none -cfx 128:128 -ifx none -drc off"
 folder = "/opt/camera"
 remove_previous_ldr = True
 link_to_webserver = True
@@ -37,6 +40,7 @@ def get_free_space_mb(folder):
 def main():
     free_space = get_free_space_mb(os.getcwd())
     print("Free space: " + str(free_space) + " MB.")
+    time.sleep(2)
     if free_space > min_free_space:
         date_time = time.strftime("%Y-%m-%d_%H%M")
         print(date_time)
