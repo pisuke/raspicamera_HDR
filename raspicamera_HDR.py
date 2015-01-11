@@ -71,6 +71,7 @@ def main():
         hdr_name = os.path.join(folder,"HDR_"+date_time+".hdr")
         tm_name = os.path.join(folder,"HDR_"+date_time+".jpg")
         cmds.append("luminance-hdr-cli -v -s %s -o %s -t mantiuk08 %s" %(hdr_name, tm_name, os.path.join(folder,"LDR_"+date_time+"_*.jpg")))
+        # pfsinme *.jpg | pfssize --maxx 1200 | pfsalign -v -c min | pfshdrcalibrate -r linear -v --bpp 16 | pfsout --radiance result.hdr
         # Falsecolour commands
         for maxlum in (1,10,100,1000,10000):
             fc_hdr_name = os.path.join(folder,"FC_"+date_time+"_"+str(maxlum).zfill(5)+".hdr")
