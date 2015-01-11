@@ -13,6 +13,8 @@ speeds = [1000000/8000,1000000/4000,1000000/2000,1000000/1000,1000000/500,
 cmd_fmt = "raspistill -v -t 1 -vf -hf -w 1024 -h 768" # raspistill command format
 opt_man = "-awb none -ifx none -drc off" # raspistill manual options format
 folder = "/opt/camera"
+remove_previous_ldr = True
+link_to_webserver = True
 
 import ctypes
 import os
@@ -41,6 +43,18 @@ def main():
         auto_photo_name = os.path.join(folder,"AUTO_"+date_time+".jpg")
         # Automatic photo command
 	cmds = [cmd_fmt + " -o " + auto_photo_name ]
+        if link_to_webserver:
+            if platform.system() != 'Windows':
+                cmds.append("rm -f /usr/share/nginx/www/img/current.jpg")
+                cmds.append("ln -s %s %s" % (auto_photo_name, os.path.join("/usr/share/nginx/www/img","AUTO"+date_time+".jpg")))
+                cmds.append("ln -s %s %s" % (auto_photo_name, "/usr/share/nginx/www/img/current.jpg"))
+        # Remove previous LDR images to save space if requested
+        if remove_previous_ldr:
+            LDR_files = os.path.join(folder,"LDR*.*")
+            if platform.system() == 'Windows':
+                cmds.append("delete %s" % LDR_files)
+            else:
+                cmds.append("rm -f %s" % LDR_files)
         # LDR bracketed photo sequence command
         for ISO in ISOs:
             for speed in speeds:
@@ -55,10 +69,14 @@ def main():
         cmds.append("luminance-hdr-cli -v -s %s -o %s -t mantiuk08 %s" %(hdr_name, tm_name, os.path.join(folder,"LDR_"+date_time+"_*.jpg")))
         # Falsecolour commands
         for maxlum in (1,10,100,1000,10000):
-           fc_hdr_name = os.path.join(folder,"FC_"+date_time+"_"+str(maxlum).zfill(5)+".hdr")
-           fc_ldr_name = os.path.join(folder,"FC_"+date_time+"_"+str(maxlum).zfill(5)+".tif")
-           cmds.append("falsecolor -i %s -l cd/m2 -n 10 -s %s > %s" % (hdr_name,maxlum,fc_hdr_name))
-           cmds.append("ra_tiff -z %s %s" % (fc_hdr_name, fc_ldr_name))
+            fc_hdr_name = os.path.join(folder,"FC_"+date_time+"_"+str(maxlum).zfill(5)+".hdr")
+            fc_ldr_name = os.path.join(folder,"FC_"+date_time+"_"+str(maxlum).zfill(5)+".tif")
+            cmds.append("falsecolor -i %s -l cd/m2 -n 10 -s %s > %s" % (hdr_name,maxlum,fc_hdr_name))
+            cmds.append("ra_tiff -z %s %s" % (fc_hdr_name, fc_ldr_name))
+            if platform.system() == 'Windows':
+                cmds.append("delete %s" % fc_hdr_name)
+            else:
+                cmds.append("rm -f %s" % fc_hdr_name)
         # Print and execute commands
         for cmd in cmds:
             print(cmd)
