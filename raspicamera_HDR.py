@@ -52,7 +52,13 @@ def main():
         # HDR command
         hdr_name = os.path.join(folder,"HDR_"+date_time+".hdr")
         tm_name = os.path.join(folder,"HDR_"+date_time+".jpg")
-        cmds.append("luminance-hdr-cli -v -s %s -o %s %s" %(hdr_name, tm_name, os.path.join(folder,"LDR_"+date_time+"_*.jpg")))
+        cmds.append("luminance-hdr-cli -v -s %s -o %s -t mantiuk08 %s" %(hdr_name, tm_name, os.path.join(folder,"LDR_"+date_time+"_*.jpg")))
+        # Falsecolour commands
+        for maxlum in (1,10,100,1000,10000):
+           fc_hdr_name = os.path.join(folder,"FC_"+date_time+"_"+str(maxlum).zfill(5)+".hdr")
+           fc_ldr_name = os.path.join(folder,"FC_"+date_time+"_"+str(maxlum).zfill(5)+".tif")
+           cmds.append("falsecolor -i %s -l cd/m2 -n 10 -s %s > %s" % (hdr_name,maxlum,fc_hdr_name))
+           cmds.append("ra_tiff -z %s %s" % (fc_hdr_name, fc_ldr_name))
         # Print and execute commands
         for cmd in cmds:
             print(cmd)
